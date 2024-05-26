@@ -26,25 +26,31 @@ def filter_files(files):
     files = list(files)
     return files
 
-def scan_files():
-    cur_dir = os.path.dirname(__file__)
-    files = glob(f'{cur_dir}/**', recursive=True)
+def scan_files(path):
+    if not os.path.exists(path):
+        raise FileNotFoundError
+    if not os.path.isdir(path):
+        raise NotADirectoryError
+
+    files = glob(f'{path}/**', recursive=True)
     files = filter_files(files)
     return files
 
-def main(output):
-    files = scan_files()
+def main(args):
+    print(f'{args.output=}')
+    print(f'{args.scan=}')
+    files = scan_files(args.scan)
 
     context = []
     for file_path in files:
         with open(file_path, 'r') as f:
             context.append({'Path': file_path.strip(), 'Content': f.read().strip()})
 
-    with open(output, 'w') as f:
+    with open(args.output, 'w') as f:
         json.dump(context, f, indent=3)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Collect scripts context.')
+    parser.add_argument('scan', type=str, help='Scanning directory')
     parser.add_argument('output', type=str, help='Output context file path')
-    args = parser.parse_args()
-    main(args.output)
+    main(parser.parse_args())
