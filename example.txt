@@ -1,0 +1,7 @@
+FILE PATH
+[/Users/otana/Development/MyGithub/project_mole/test_structure/main.py]
+FILE CONTENT
+[from test_structure.src import some_function
+
+some_function()
+]
